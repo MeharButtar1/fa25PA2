@@ -31,21 +31,6 @@ int main() {
     // Step 2: Create leaf nodes for each character with nonzero frequency
     int nextFree = createLeafNodes(freq);
 
-    // TEMPORARY TEST FOR HEAP PUSH + UPHEAP
-    cout << "\nHEAP PUSH TEST\n";
-    MinHeap testHeap;
-    for (int i = 0; i < nextFree; ++i) {
-        cout << "Pushing node " << i << " with weight " << weightArr[i] << "\n";
-        testHeap.push(i, weightArr);
-    }
-
-    cout << "Heap order by weight: ";
-    for (int i = 0; i < testHeap.size; ++i) {
-        cout << weightArr[testHeap.data[i]] << " ";
-    }
-    cout << "\n";
-
-
     // Step 3: Build encoding tree using your heap
     int root = buildEncodingTree(nextFree);
 
