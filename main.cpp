@@ -89,15 +89,6 @@ int createLeafNodes(int freq[]) {
 
 // Step 3: Build the encoding tree using heap operations
 int buildEncodingTree(int nextFree) {
-    // TODO:
-    // 1. Create a MinHeap object.
-    // 2. Push all leaf node indices into the heap.
-    // 3. While the heap size is greater than 1:
-    //    - Pop two smallest nodes
-    //    - Create a new parent node with combined weight
-    //    - Set left/right pointers
-    //    - Push new parent index back into the heap
-    // 4. Return the index of the last remaining node (root)
 
         // 1. Create a MinHeap object.
         MinHeap heap;
@@ -134,13 +125,9 @@ int buildEncodingTree(int nextFree) {
 
 // Step 4: Use an STL stack to generate codes
 void generateCodes(int root, string codes[]) {
-    // TODO:
-    // Use stack<pair<int, string>> to simulate DFS traversal.
-    // Left edge adds '0', right edge adds '1'.
-    // Record code when a leaf node is reached.
     if (root == -1) return;
 
-    // Special case: only one unique character
+    // Special case: only one unique character, sets it to 0 for an output
     if (leftArr[root] == -1 && rightArr[root] == -1) {
         char ch = charArr[root];
         if (ch >= 'a' && ch <= 'z') {
@@ -150,16 +137,21 @@ void generateCodes(int root, string codes[]) {
     }
 
     // Stack holds pairs of (node index, current bit path)
+    // Each path is built using "0" for left and "1" for right
     stack<pair<int, string>> stk;
+
+    //We start with the root node and a path thats empty
     stk.push({root, ""});
 
     while (!stk.empty()) {
         auto [node, path] = stk.top();
         stk.pop();
 
+        // If this node is a leaf (no left or right children)
         if (leftArr[node] == -1 && rightArr[node] == -1) {
             char ch = charArr[node];
             if (ch >= 'a' && ch <= 'z') {
+                // Store the path as the code for this character
                 codes[ch - 'a'] = path;
             }
         } else {
@@ -167,6 +159,7 @@ void generateCodes(int root, string codes[]) {
             if (leftArr[node] != -1) {
                 stk.push({leftArr[node], path + "0"});
             }
+            // push right child second
             if (rightArr[node] != -1) {
                 stk.push({rightArr[node], path + "1"});
             }
