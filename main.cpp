@@ -26,7 +26,7 @@ int main() {
     int freq[26] = {0};
 
     // Step 1: Read file and count letter frequencies
-    buildFrequencyTable(freq, "input.txt");
+    buildFrequencyTable(freq, "../input.txt");
 
     // Step 2: Create leaf nodes for each character with nonzero frequency
     int nextFree = createLeafNodes(freq);
@@ -138,6 +138,36 @@ void generateCodes(int root, string codes[]) {
     // Use stack<pair<int, string>> to simulate DFS traversal.
     // Left edge adds '0', right edge adds '1'.
     // Record code when a leaf node is reached.
+    if (root == -1) return;
+
+    // Stack holds pairs of (node index, current bit path)
+    stack<pair<int, string>> stk;
+
+    // Start traversal from root with an empty path
+    stk.push({root, ""});
+
+    while (!stk.empty()) {
+        auto [node, path] = stk.top();
+        stk.pop();
+
+        // Check if it's a leaf node (no children)
+        if (leftArr[node] == -1 && rightArr[node] == -1) {
+            char ch = charArr[node];
+            if (ch >= 'a' && ch <= 'z') {
+                codes[ch - 'a'] = path;
+            }
+        } else {
+            // Traverse right child (adds '1')
+            if (rightArr[node] != -1) {
+                stk.push({rightArr[node], path + "1"});
+            }
+            // Traverse left child (adds '0')
+            if (leftArr[node] != -1) {
+                stk.push({leftArr[node], path + "0"});
+            }
+        }
+    }
+
 }
 
 // Step 5: Print table and encoded message
