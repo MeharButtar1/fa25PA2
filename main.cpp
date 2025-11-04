@@ -39,7 +39,7 @@ int main() {
     generateCodes(root, codes);
 
     // Step 5: Encode the message and print output
-    encodeMessage("input.txt", codes);
+    encodeMessage("../input.txt", codes);
 
     return 0;
 }
@@ -140,34 +140,38 @@ void generateCodes(int root, string codes[]) {
     // Record code when a leaf node is reached.
     if (root == -1) return;
 
+    // Special case: only one unique character
+    if (leftArr[root] == -1 && rightArr[root] == -1) {
+        char ch = charArr[root];
+        if (ch >= 'a' && ch <= 'z') {
+            codes[ch - 'a'] = "0";
+        }
+        return;
+    }
+
     // Stack holds pairs of (node index, current bit path)
     stack<pair<int, string>> stk;
-
-    // Start traversal from root with an empty path
     stk.push({root, ""});
 
     while (!stk.empty()) {
         auto [node, path] = stk.top();
         stk.pop();
 
-        // Check if it's a leaf node (no children)
         if (leftArr[node] == -1 && rightArr[node] == -1) {
             char ch = charArr[node];
             if (ch >= 'a' && ch <= 'z') {
                 codes[ch - 'a'] = path;
             }
         } else {
-            // Traverse right child (adds '1')
-            if (rightArr[node] != -1) {
-                stk.push({rightArr[node], path + "1"});
-            }
-            // Traverse left child (adds '0')
+            // push left before right
             if (leftArr[node] != -1) {
                 stk.push({leftArr[node], path + "0"});
             }
+            if (rightArr[node] != -1) {
+                stk.push({rightArr[node], path + "1"});
+            }
         }
     }
-
 }
 
 // Step 5: Print table and encoded message
